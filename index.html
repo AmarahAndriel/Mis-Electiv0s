@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Un fetch</title>
+    <style>
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            color: black;
+        }
+        table {
+            border-collapse: collapse; 
+            text-align: left;
+        }
+        td, th {
+            border: 1px solid magenta; 
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Mis electivos</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Asignatura</th>
+            <th>Grupo</th>
+            <th>Enfoque</th>
+        </tr>
+    </thead>
+    <tbody id="tabla-body"></tbody>
+</table>
+
+<script>
+const tbody = document.querySelector("#tabla-body");
+const URL = "https://api.myjson.online/v1/records/5dc65be6-8cc1-4466-a0af-2bbcf9e57f3c";
+
+fetch(URL)
+    .then((respuesta) => {
+        if (!respuesta.ok) {
+            throw new Error("Error HTTP: " + respuesta.status);
+        }
+        return respuesta.json();
+    })
+    .then((datos) => {
+        const trabajo = datos.data;
+        console.log("Datos recibidos:", trabajo);
+
+        trabajo.forEach((x) => {
+            if (x.ok == 1) {
+                tbody.innerHTML += `
+                <tr>
+                    <td>${x.name}</td>
+                    <td>${x.group}</td>
+                    <td>${x.focus}</td>
+                </tr>`;
+            }
+        });
+    })
+    .catch((error) => {
+        console.error("Algo salió mal:", error);
+    });
+</script>
+
+</body>
+</html>
